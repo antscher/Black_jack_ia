@@ -1,4 +1,3 @@
-from blackjack import DisplayCard
 import random
 
 def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split):
@@ -11,13 +10,14 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
     5. Prendre une assurance (Insurance)
     6. Abandonner (Surrender)
     """
+    action = int(action)
     if action == 1:
         random_index = random.randrange(len(cards))
         card = cards[random_index]
         print("You draw : " + DisplayCard(card))
 
         discard.append(card)
-        player_points.append(card)
+        player_points.append(card[1])
         cards.pop(random_index)
         continue_game = True
 
@@ -31,13 +31,13 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         card = cards[random_index]
         print("You draw : " + DisplayCard(card))
         discard.append(card)
-        player_points.append(card)
+        player_points.append(card[1])
         cards.pop(random_index)
         continue_game = False
     if action == 4:
         # Séparer (Split)
         for i in range(len(player_points)):
-            if player_points[-1][1] in [card[1] for card in player_points[:-1]]:
+            if player_points[-1] in [card for card in player_points[:-1]]:
                 print("You can split these cards.")
                 continue_game = True
                 split = True
@@ -48,7 +48,7 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
                 continue_game = True
     if action == 5:
         # Prendre une assurance (Insurance)
-        if croupier_points[0][1] == 11:
+        if croupier_points[0] == 11:
             mise *= 1.5
             assurance = True
             continue_game = True
@@ -57,4 +57,26 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         # Abandonner (Surrender)
         pass
 
-    return player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split
+    return continue_game,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split
+
+
+def DisplayCard(card):
+    res= ""
+    color = card[0]
+    figure = card[1]
+    if color==0:
+        res+="of spade "
+    elif color == 1:
+        res+="of heart "
+    elif color ==2 : 
+        res+= "of clubs "
+    else :
+        res += "of diamonds "
+
+    if figure == 10 : 
+        res = "head wich is worth 10 points "+res
+    if figure ==11:
+        res = "Ace "
+    else :
+        res = str(figure) +" "+res
+    return res

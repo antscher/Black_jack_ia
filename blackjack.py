@@ -1,4 +1,6 @@
 import random
+from pari import pari as turn, DisplayCard
+
 def create_packofcard() : 
     #We create a pack of cards 0=spade, 1=heart, 2=clubs, 3=diamonds,
     #Also everything beyond ten so every head is valued at 10 points
@@ -14,26 +16,6 @@ def create_packofcard() :
     random.shuffle(pack)
     return pack
 
-def DisplayCard(card):
-    res= ""
-    color = card[0]
-    figure = card[1]
-    if color==0:
-        res+="of spade "
-    elif color == 1:
-        res+="of heart "
-    elif color ==2 : 
-        res+= "of clubs "
-    else :
-        res += "of diamonds "
-
-    if figure == 10 : 
-        res = "head wich is worth 10 points "+res
-    if figure ==11:
-        res = "Ace "
-    else :
-        res = str(figure) +" "+res
-    return res
 
 def adujste_points(list):
     for point in  list : 
@@ -74,22 +56,21 @@ def blackjack(numberofpack) :
         croupier_points.append(card[1])
         cards.pop(random_index)
 
-        user_input = "y"
-        while sum(player_points) < 21 and  user_input == "y":
+        continue_game = True
+        assurance = False
+        split = False
+        mise = 10
+        while sum(player_points) < 21 and  continue_game:
             user_input = input("Would you like another card ? write y if yes, anything else otherwise")
-            random_index = random.randrange(len(cards))
-            card = cards[random_index]
-            print("You draw : " + DisplayCard(card))
-
-            discard.append(card)
-            player_points.append(card[1])
+            continue_game,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split= turn(user_input,player_points,[],croupier_points,cards,discard,mise,assurance,split)
+           
             print(sum(player_points))
             
             adujste_points(player_points)
-            print(sum(player_points))
-            cards.pop(random_index)
+            print("ajustement ", sum(player_points))
 
-        print(sum(player_points))
+
+        print("mise : ", mise)
         if sum(player_points) >=21 :
             return "you loose"
         while sum(croupier_points)<=17 : 
