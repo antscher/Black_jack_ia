@@ -57,4 +57,4 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         # Abandonner (Surrender)
         pass
 
-    return action,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split
+    return player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split
