@@ -26,7 +26,7 @@ def adujste_points(list):
     
 
 
-def blackjack(numberofpack) :
+def blackjack(numberofpack,bet) :
     cards = []
     discard = []
     player_points = []
@@ -59,7 +59,7 @@ def blackjack(numberofpack) :
         continue_game = True
         assurance = False
         split = False
-        mise = 10
+        mise = bet
         while sum(player_points) < 21 and  continue_game:
             user_input = input("Would you like another card ? write y if yes, anything else otherwise")
             continue_game,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split= turn(user_input,player_points,[],croupier_points,cards,discard,mise,assurance,split)
@@ -82,6 +82,9 @@ def blackjack(numberofpack) :
             croupier_points.append(card[1])
             adujste_points(croupier_points)
             cards.pop(random_index)
+        if assurance and sum(croupier_points)==21:
+            mise *=2
+            return mise
 
         if sum(croupier_points) >=21 or sum(croupier_points)<sum(player_points):
             return "you win"
