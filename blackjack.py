@@ -35,12 +35,20 @@ def DisplayCard(card):
         res = str(figure) +" "+res
     return res
 
+def adujste_points(list):
+    for point in  list : 
+        if point == 11 and sum(list)>=21: 
+            index = list.index(11)
+            list[index]=1
+    return list
+    
+
 
 def blackjack(numberofpack) :
     cards = []
     discard = []
-    player_points = 0
-    croupier_points = 0
+    player_points = []
+    croupier_points = []
     for i in range(numberofpack):
         cards += create_packofcard()
     print("Welcome to the game")
@@ -54,7 +62,7 @@ def blackjack(numberofpack) :
         print("You draw : " + DisplayCard(card))
 
         discard.append(card)
-        player_points += card[1]
+        player_points.append(card[1])
         cards.pop(random_index)
 
 
@@ -63,31 +71,37 @@ def blackjack(numberofpack) :
         print("I draw : " + DisplayCard(card))
 
         discard.append(card)
-        croupier_points += card[1]
+        croupier_points.append(card[1])
         cards.pop(random_index)
 
         user_input = "y"
-        while player_points < 21 and  user_input == "y":
+        while sum(player_points) < 21 and  user_input == "y":
             user_input = input("Would you like another card ? write y if yes, anything else otherwise")
             random_index = random.randrange(len(cards))
             card = cards[random_index]
             print("You draw : " + DisplayCard(card))
 
             discard.append(card)
-            player_points += card[1]
+            player_points.append(card[1])
+            print(sum(player_points))
+            adujste_points(player_points)
+            print(sum(player_points))
             cards.pop(random_index)
 
-        if player_points >=21 :
+        print(sum(player_points))
+        if sum(player_points) >=21 :
             return "you loose"
-        while croupier_points<=17 : 
+        while sum(croupier_points)<=17 : 
             random_index = random.randrange(len(cards))
             card = cards[random_index]
             print("I draw : " + DisplayCard(card))
 
             discard.append(card)
-            croupier_points += card[1]
+            croupier_points.append(card[1])
+            adujste_points(croupier_points)
             cards.pop(random_index)
-        if croupier_points >=21 or croupier_points<player_points:
+
+        if sum(croupier_points) >=21 or sum(croupier_points)<sum(player_points):
             return "you win"
         else :
             return "you loose"
