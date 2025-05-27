@@ -1,7 +1,7 @@
 from blackjack import DisplayCard
 import random
 
-def pari(action,player_points,croupier_points,cards,discard,mise,assurance):
+def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split):
     """
     Actions possibles du joueur au Blackjack :
     1. Tirer une carte (Hit)
@@ -40,6 +40,9 @@ def pari(action,player_points,croupier_points,cards,discard,mise,assurance):
             if player_points[-1][1] in [card[1] for card in player_points[:-1]]:
                 print("You can split these cards.")
                 continue_game = True
+                split = True
+                player_points2.append(player_points.pop())
+
             else:
                 print("You cannot split these cards.")
                 continue_game = True
@@ -54,7 +57,4 @@ def pari(action,player_points,croupier_points,cards,discard,mise,assurance):
         # Abandonner (Surrender)
         pass
 
-    if player_points > 21:
-        print("You busted with " + str(player_points) + " points.")
-        continue_game = False
     return player_points,continue_game,assurance 
