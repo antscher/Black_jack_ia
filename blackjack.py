@@ -36,63 +36,65 @@ def blackjack(numberofpack,bet) :
     print("Welcome to the game")
     user_play = input("Would you like to play ? write y if yes, anything else otherwise ")
 
-    if user_play == "y": 
 
 
-        random_index = random.randrange(len(cards))
-        card = cards[random_index]
-        print("You draw : " + DisplayCard(card))
 
-        discard.append(card)
-        player_points.append(card[1])
-        cards.pop(random_index)
+    random_index = random.randrange(len(cards))
+    card = cards[random_index]
+    print("You draw : " + DisplayCard(card))
+
+    discard.append(card)
+    player_points.append(card[1])
+    cards.pop(random_index)
 
 
+    random_index = random.randrange(len(cards))
+    card = cards[random_index]
+    print("I draw : " + DisplayCard(card))
+
+    discard.append(card)
+    croupier_points.append(card[1])
+    cards.pop(random_index)
+
+    continue_game = True
+    assurance = False
+    split = False
+    mise = bet
+    while sum(player_points) < 21 and  continue_game:
+        user_input = input("Would you like another card ? write y if yes, anything else otherwise")
+        continue_game,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split= turn(user_input,player_points,[],croupier_points,cards,discard,mise,assurance,split)
+        
+        print(sum(player_points))
+        
+        adujste_points(player_points)
+        print("ajustement ", sum(player_points))
+
+
+    print("mise : ", mise)
+    if sum(player_points) >=21 :
+        return "you loose"
+    while sum(croupier_points)<=17 : 
         random_index = random.randrange(len(cards))
         card = cards[random_index]
         print("I draw : " + DisplayCard(card))
 
         discard.append(card)
         croupier_points.append(card[1])
+        adujste_points(croupier_points)
         cards.pop(random_index)
+    if assurance and sum(croupier_points)==21:
+        mise *=2
+        print("you win blackjack !")
+        return mise
 
-        continue_game = True
-        assurance = False
-        split = False
-        mise = bet
-        while sum(player_points) < 21 and  continue_game:
-            user_input = input("Would you like another card ? write y if yes, anything else otherwise")
-            continue_game,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split= turn(user_input,player_points,[],croupier_points,cards,discard,mise,assurance,split)
-           
-            print(sum(player_points))
-            
-            adujste_points(player_points)
-            print("ajustement ", sum(player_points))
-
-
-        print("mise : ", mise)
-        if sum(player_points) >=21 :
-            return "you loose"
-        while sum(croupier_points)<=17 : 
-            random_index = random.randrange(len(cards))
-            card = cards[random_index]
-            print("I draw : " + DisplayCard(card))
-
-            discard.append(card)
-            croupier_points.append(card[1])
-            adujste_points(croupier_points)
-            cards.pop(random_index)
-        if assurance and sum(croupier_points)==21:
-            mise *=2
-            return mise
-
-        if sum(croupier_points) >=21 or sum(croupier_points)<sum(player_points):
-            return "you win"
-        else :
-            return "you loose"
-
+    if sum(croupier_points) >=21 or sum(croupier_points)<sum(player_points):
+        print("you win")
+        return mise*2
     else :
-        return "too bad !"
+        print("you loose")
+        return 0
+
+
             
 
 
