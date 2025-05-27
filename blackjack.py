@@ -84,6 +84,7 @@ def blackjack(numberofpack) :
             discard.append(card)
             player_points.append(card[1])
             print(sum(player_points))
+            
             adujste_points(player_points)
             print(sum(player_points))
             cards.pop(random_index)
