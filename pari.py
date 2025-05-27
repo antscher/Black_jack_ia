@@ -31,7 +31,7 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         card = cards[random_index]
         print("You draw : " + DisplayCard(card))
         discard.append(card)
-        player_points.card
+        player_points.append(card)
         cards.pop(random_index)
         continue_game = False
     if action == 4:
@@ -57,4 +57,4 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         # Abandonner (Surrender)
         pass
 
-    return player_points,continue_game,assurance 
+    return action,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split
