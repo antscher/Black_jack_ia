@@ -1,6 +1,6 @@
 import random
 
-def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split , surrender):
+def pari(action,player_points,player_pointssplit,croupier_points,cards,discard,assurance , surrender,double):
     """
     Actions possibles du joueur au Blackjack :
     1. Tirer une carte (Hit)
@@ -26,7 +26,6 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         continue_game = False
     if action == 3:
         # Doubler la mise (Double Down)
-        mise *= 2
         random_index = random.randrange(len(cards))
         card = cards[random_index]
         print("You draw : " + DisplayCard(card))
@@ -34,15 +33,14 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         player_points.append(card[1])
         cards.pop(random_index)
         continue_game = False
+        double = True
     if action == 4:
         # Séparer (Split)
         for i in range(len(player_points)):
             if player_points[-1] in [card for card in player_points[:-1]]:
                 print("You can split these cards.")
                 continue_game = True
-                split = True
-                player_points2.append(player_points.pop())
-                mise *= 2
+                player_pointssplit.append(player_points.pop())
 
             else:
                 print("You cannot split these cards.")
@@ -51,7 +49,6 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
         # Prendre une assurance (Insurance)
         if croupier_points[0] == 11 and not assurance:
             print("You take insurance.")
-            mise *= 1.5
             assurance = True
             continue_game = True
 
@@ -63,7 +60,7 @@ def pari(action,player_points,player_points2,croupier_points,cards,discard,mise,
     else:
         print("Invalid action. Please choose a valid action.")
 
-    return continue_game,player_points,player_points2,croupier_points,cards,discard,mise,assurance ,split,surrender
+    return continue_game,player_points,player_pointssplit,croupier_points,cards,discard,assurance ,surrender,double
 
 
 def DisplayCard(card):
