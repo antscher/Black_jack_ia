@@ -38,24 +38,32 @@ def blackjack(numberofpack,bet) :
 
 
 
-
+    # First we draw two cards for the player and one for the croupier
+    #First card for the player
     random_index = random.randrange(len(cards))
     card = cards[random_index]
     print("You draw : " + DisplayCard(card))
-
     discard.append(card)
     player_points.append(card[1])
     cards.pop(random_index)
 
+    #Second card for the player
+    random_index = random.randrange(len(cards))
+    card = cards[random_index]
+    print("You draw : " + DisplayCard(card))
+    discard.append(card)
+    player_points.append(card[1])
+    cards.pop(random_index)
 
+    #First card for the croupier
     random_index = random.randrange(len(cards))
     card = cards[random_index]
     print("I draw : " + DisplayCard(card))
-
     discard.append(card)
     croupier_points.append(card[1])
     cards.pop(random_index)
 
+    blackjack = False
     continue_game = True
     assurance = False
     split = False
@@ -64,6 +72,13 @@ def blackjack(numberofpack,bet) :
     double = False
     player_pointssplit = [player_points]
     total_points = []
+
+    #Case where the player has a blackjack in is first hand
+    if sum(player_points) == 21:
+        print("You win with a blackjack !")
+        blackjack = True
+        total_points.append(21)
+        continue_game = False
 
     while player_pointssplit != []:
         player_points = player_pointssplit.pop().copy()
@@ -102,44 +117,40 @@ def blackjack(numberofpack,bet) :
 
 
 def game_result(bet,split_point,croupier_points,assurance,surrender,double): 
-
-    if double :
-        bet *=2
+    total =0 
 
     if split_point ==-1 :
         print("you surrender")
-        return -bet/2
-
-        
-    if split_point >=21 :
-        print("you loose")
-        return -bet
-        
-
+        total  -= bet/2        
     if assurance and sum(croupier_points)==21:
-        bet += bet *1.5
+        total += bet
         print("you win your assurance !")
-        return bet/2
     if assurance and sum(croupier_points)!=21:
-        return -bet/2
-
-    if surrender:
-        print("you loose half of your bet")
-        return -bet/2
+        total -= bet/2
     
-    if sum(croupier_points) >21 or sum(croupier_points)<split_point:
-        print("you win")
-        return bet*2
-    
-    elif max(21,sum(croupier_points)) == max(21,split_point):
-        print("draw")
-        return bet
-    
-    else :
+    if blackjack :
+        print("you win blackjack")
+        total += bet*1.5
+        if double :
+            total += bet*1.5
+    elif split_point >21 :
         print("you loose")
-        return -bet
-
-
+        total -= bet
+    elif sum(croupier_points) >21 or sum(croupier_points)<split_point and split_point==21:
+        print("you win blackjack")
+        total += bet*1.5
+        if double :
+            total += bet*1.5
+    elif sum(croupier_points) >21 or sum(croupier_points)<split_point:
+        print("you win")
+        total += bet
+        if double :
+            total += bet
+    else :
+        print("draw")
+        total += 0
+    
+    return total
 
 
 print(blackjack(4,10))
