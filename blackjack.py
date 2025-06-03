@@ -1,4 +1,3 @@
-import random
 from pari import pari as turn, DisplayCard
 
 def create_packofcard() : 
@@ -86,35 +85,31 @@ def blackjack(numberofpack,bet) :
     split = False
     mise = bet
     surrender = False
-    double = []
-    player_pointssplit = [player_points]
-    total_points = []
+    double = False
+    total_points = 0
 
     #Case where the player has a blackjack in is first hand
     if sum(player_points) == 21:
         print("You win with a blackjack !")
-        total_points.append(21)
+        total_points =21
         continue_game = False
         blacjack_first = True
 
-    while player_pointssplit != []:
-        player_points = player_pointssplit.pop()
-        doublesplit = False
-        while sum(player_points) < 21 and  continue_game:
-            user_input = input("Would you like another card ? write y if yes, anything else otherwise")
-            continue_game,player_points,player_pointssplit,croupier_points,cards,discard,assurance ,surrender,doublesplit,split= turn(user_input,player_points,player_pointssplit,croupier_points,cards,discard,assurance , surrender,doublesplit,split)
-            
-            
-            adujste_points(player_points)
-            print("ajustement ", sum(player_points))
-        if surrender:
-            total_points.append(-1)
-        else:
-            total_points.append(sum(player_points))
 
-        print("end on this hand")
-        continue_game = True
-        double.append(doublesplit)
+    while sum(player_points) < 21 and  continue_game:
+        user_input = input("Would you like another card ? write y if yes, anything else otherwise")
+        continue_game,player_points,croupier_points,cards,discard,assurance ,surrender,double,split= turn(user_input,player_points,croupier_points,cards,discard,assurance , surrender,double,split)
+            
+            
+        adujste_points(player_points)
+        print("ajustement ", sum(player_points))
+    if surrender:
+        total_points==-1
+    else:
+        total_points==sum(player_points)
+
+    print("end on this hand")
+
 
 
     print("mise : ", mise)
@@ -129,10 +124,8 @@ def blackjack(numberofpack,bet) :
         adujste_points(croupier_points)
         cards.pop(random_index)
 
-    gain = 0
-    for split_point in total_points: 
-        print("split point : ", split_point)
-        gain += game_result(bet,split_point,croupier_points,assurance,surrender,double.pop(0),blackjack_first)
+
+    gain= game_result(bet,total_points,croupier_points,assurance,surrender,double,blackjack_first)
     return gain
     
 
@@ -179,7 +172,7 @@ def game_result(bet,split_point,croupier_points,assurance,surrender,double,black
             total -= bet
     else :
         print("draw")
-        total += 0
+        total+= 0
     
     return total
 

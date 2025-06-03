@@ -1,6 +1,6 @@
 import random
 
-def pari(action,player_points,player_pointssplit,croupier_points,cards,discard,assurance , surrender,double,split):
+def pari(action,player_points,croupier_points,cards,discard,assurance , surrender,double,split):
     """
     Actions possibles du joueur au Blackjack :
     1. Tirer une carte (Hit)
@@ -11,7 +11,6 @@ def pari(action,player_points,player_pointssplit,croupier_points,cards,discard,a
     6. Abandonner (Surrender) (not in this rule set)
     """
     action = int(action)
-     
     if action == 1:
         random_index = random.randrange(len(cards))
         card = cards[random_index]
@@ -36,24 +35,16 @@ def pari(action,player_points,player_pointssplit,croupier_points,cards,discard,a
             cards.pop(random_index)
             continue_game = False
             double = True
+
     elif action == 4:
-        # Séparer (Split)
-
-        if not (split and (player_points[0]== 1 or player_points[0] == 11)):
-            if player_points[0] == player_points[1] :
-                print("You can split these cards.")
-                continue_game = True
-                player_pointssplit.append([player_points.pop()])
-
-        else:
-            print("You cannot split these cards.")
-            continue_game = True
-
-    elif action == 5:
         # Prendre une assurance (Insurance)
         if (croupier_points[0] == 11 or croupier_points[0] == 1 ) and not assurance:
             print("You take insurance.")
             assurance = True
+            continue_game = True
+
+        else:
+            print("You cannot take insurance now.")
             continue_game = True
     else:
         print("Invalid action. Please choose a valid action.")
@@ -66,7 +57,7 @@ def pari(action,player_points,player_pointssplit,croupier_points,cards,discard,a
         continue_game = False
     """
 
-    return continue_game,player_points,player_pointssplit,croupier_points,cards,discard,assurance ,surrender,double,split
+    return continue_game,player_points,croupier_points,cards,discard,assurance ,surrender,double,split
 
 
 def DisplayCard(card):
