@@ -107,7 +107,7 @@ def blackjack(numberofpack,bet) :
     if surrender:
         total_points==-1
     else:
-        total_points==sum(player_points)
+        total_points=sum(player_points)
 
     print("end on this hand")
 
