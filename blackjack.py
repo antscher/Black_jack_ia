@@ -1,4 +1,5 @@
 from pari import pari as turn, DisplayCard
+import random as random
 
 def create_packofcard() : 
     #We create a pack of cards 0=spade, 1=heart, 2=clubs, 3=diamonds,
@@ -16,7 +17,7 @@ def create_packofcard() :
     return pack
 
 
-def adujste_points(list):
+def adjust_points(list):
     for point in  list : 
         if point == 11 and sum(list)>=21: 
             index = list.index(11)
@@ -135,46 +136,36 @@ def blackjack(numberofpack,bet) :
 def game_result(bet,split_point,croupier_points,assurance,surrender,double,blackjack_first): 
     
     total =0 
-    print("somme du croupier : ", sum(croupier_points))
     if split_point ==-1 :
-        print("you surrender")
         total  -= bet/2        
     if assurance and sum(croupier_points)==21:
         total += bet
-        print("you win your assurance !")
     if assurance and sum(croupier_points)!=21:
         total -= bet/2
     
     if blackjack_first :
-        print("you win blackjack")
         total += bet*1.5
         if double :
             total += bet*1.5
     elif split_point >21: 
-        print("you loose")
         total -= bet
         if double :
             total -= bet
     elif (sum(croupier_points) >21 or sum(croupier_points)<split_point) and split_point==21:
-        print("you win blackjack")
         total += bet*1.5
         if double :
             total += bet*1.5
     elif sum(croupier_points) >21 or sum(croupier_points)<split_point:
-        print("you win")
         total += bet
         if double :
             total += bet
     elif sum(croupier_points) > split_point:
-        print("you loose")
         total -= bet
         if double :
             total -= bet
     else :
-        print("draw")
         total+= 0
     
     return total
 
 
-print("total point :",blackjack(4,10))

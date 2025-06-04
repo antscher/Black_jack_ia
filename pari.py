@@ -14,7 +14,6 @@ def pari(action,player_points,croupier_points,cards,discard,assurance , surrende
     if action == 1:
         random_index = random.randrange(len(cards))
         card = cards[random_index]
-        print("You draw : " + DisplayCard(card))
 
         discard.append(card)
         player_points.append(card[1])
@@ -29,7 +28,6 @@ def pari(action,player_points,croupier_points,cards,discard,assurance , surrende
         if not (split and (player_points[0]== 1 or player_points[0] == 11)):
             random_index = random.randrange(len(cards))
             card = cards[random_index]
-            print("You draw : " + DisplayCard(card))
             discard.append(card)
             player_points.append(card[1])
             cards.pop(random_index)
@@ -39,15 +37,12 @@ def pari(action,player_points,croupier_points,cards,discard,assurance , surrende
     elif action == 4:
         # Prendre une assurance (Insurance)
         if (croupier_points[0] == 11 or croupier_points[0] == 1 ) and not assurance:
-            print("You take insurance.")
             assurance = True
             continue_game = True
 
         else:
-            print("You cannot take insurance now.")
             continue_game = True
     else:
-        print("Invalid action. Please choose a valid action.")
         continue_game = True
     """
     if action == 6:

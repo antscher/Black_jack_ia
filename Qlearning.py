@@ -1,6 +1,6 @@
-from blackjack import create_packofcard, blackjack,adjust_points
+from blackjack import create_packofcard, blackjack,adjust_points, game_result,turn
 import numpy as np
-import random
+import random as random
 
 '''
 a state = (player cards, croupier cards, action)
@@ -8,21 +8,23 @@ action = hit , stand, double, take_insurance (1 to 4)
 
 
 '''
-num_episodes = 100000
-alpha = 0.1
-gamma = 1.0
-epsilon = 0.1  # exploration rate
 nb_of_pack = 4
 
 def create_Qtable():
-    deck = create_packofcard(nb_of_pack)
-    Qtable = []
+    Qtable = {}
     for player_first_draw in range(2,12):
-        for player_second_draw in range(2,12):
-            for croupier_first_draw in range(2,12):
-                sum_card = adjust_points([player_first_draw,player_second_draw])
-                Qtable.append((player_first_draw,player_second_draw,sum_card,croupier_first_draw),[0, 0, 0, 0])  # Initialize Q-values for each action
-
+        for player_second_draw in range(player_first_draw,12):
+            sum_card = 0
+            if player_first_draw == 11 :
+                sum_card = 1
+            else: sum_card += player_first_draw
+            if player_second_draw == 11:
+                sum_card += 1   
+            else: sum_card += player_second_draw
+            for sum_card in range(sum_card,23):
+                for croupier_first_draw in range(2,12):
+                    Qtable[(player_first_draw,player_second_draw,sum_card,croupier_first_draw)] = [0, 0, 0, 0]  # Initialize Q-values for each action
+    return Qtable
 
 def choose_action(state, Q, epsilon):
     rd = np.random.rand()
@@ -37,24 +39,24 @@ def choose_action(state, Q, epsilon):
         return np.argmax(Q[state])
 
 
-def update_Q(Q, state, action, reward, next_state, alpha, gamma):
-    best_next_action = np.argmax(Q[next_state])
+def update_Q(Q, state, action,best_next_action, reward, next_state, alpha, gamma):
     td_target = reward + gamma * Q[next_state][best_next_action]
     td_delta = td_target - Q[state][action]
     Q[state][action] += alpha * td_delta
 
 
 
-def blackjack(numberofpack,game_state) :
+def blackjack(Q,epsilon,bet) :
+    list_of_action = []
+    list_of_state = []
 
     cards = []
     discard = []
     player_points = []
     croupier_points = []
-    for i in range(numberofpack):
+    for i in range(nb_of_pack):
         cards += create_packofcard()
-    print("Welcome to the game")
-    user_play = input("Would you like to play ? write y if yes, anything else otherwise ")
+  
     
     random_index = random.randrange(len(cards))
     card = cards[random_index]
@@ -68,7 +70,9 @@ def blackjack(numberofpack,game_state) :
     discard.append(card)
     player_points.append(card[1])
     cards.pop(random_index)
-    
+
+    if player_points[0] > player_points[1]:
+        player_points[0], player_points[1] = player_points[1], player_points[0]
 
     #First card for the croupier
     random_index = random.randrange(len(cards))
@@ -77,73 +81,75 @@ def blackjack(numberofpack,game_state) :
     croupier_points.append(card[1])
     cards.pop(random_index)
 
+    state = (player_points[0], player_points[1], max(22,sum(adjust_points(player_points))) , croupier_points[0])  # Update state with player and croupier points
+    list_of_state.append(state)
+
     blackjack_first = False
     continue_game = True
     assurance = False
     split = False
-    mise = bet
     surrender = False
     double = False
     total_points = 0
 
+
+
     #Case where the player has a blackjack in is first hand
-    if sum(player_points) == 21:
-        print("You win with a blackjack !")
+    if sum(adjust_points(player_points)) == 21:
         total_points =21
         continue_game = False
         blacjack_first = True
 
 
-    while sum(player_points) < 21 and  continue_game:
-        user_input = input("Would you like another card ? write y if yes, anything else otherwise")
-        continue_game,player_points,croupier_points,cards,discard,assurance ,surrender,double,split= turn(user_input,player_points,croupier_points,cards,discard,assurance , surrender,double,split)
-            
-            
-        adujste_points(player_points)
-        print("ajustement ", sum(player_points))
+    while sum(adjust_points(player_points)) < 21 and  continue_game:
+        action = choose_action(state, Q, epsilon)
+        list_of_action.append(action)
+        continue_game,player_points,croupier_points,cards,discard,assurance ,surrender,double,split= turn(action,player_points,croupier_points,cards,discard,assurance , surrender,double,split) # type: ignore
+        
+        state = (state[0], state[1], sum(adjust_points(player_points)), state[3])  # Update state with player and croupier points
+        list_of_state.append(state)
+
     if surrender:
         total_points==-1
     else:
         total_points==sum(player_points)
 
-    print("end on this hand")
-
-
-
-    print("mise : ", mise)
     
     while sum(croupier_points)<=17 : 
         random_index = random.randrange(len(cards))
         card = cards[random_index]
-        print("I draw : " + DisplayCard(card))
 
         discard.append(card)
         croupier_points.append(card[1])
-        adujste_points(croupier_points)
+        croupier_points = adjust_points(croupier_points)
         cards.pop(random_index)
 
 
     gain= game_result(bet,total_points,croupier_points,assurance,surrender,double,blackjack_first)
-    return state, gain
+    return gain, list_of_state, list_of_action
 
 
-num_episodes = 100000
+num_episodes = 1000000
 alpha = 0.1
 gamma = 1.0
 epsilon = 0.1
 Q = create_Qtable()
+bet = 1
 
 for _ in range(num_episodes):
-    action = choose_action(state, Q, epsilon)
-    next_state, reward, = blackjack(action)
+    gain,list_of_state,list_of_action = blackjack(Q,epsilon,bet)
     """
     Implementaion of a propagation of the reward in all the trajectory
     """
 
     # Update Q-table
-    update_Q(Q, state, action, reward, next_state, alpha, gamma)
-    state = next_state
+    for i in range(len(list_of_state) - 2):
+        update_Q(Q, list_of_state[i], list_of_action[i],list_of_action[i+1], gain, list_of_state[i+1], alpha, gamma)
 
+for _ in range(100):
+    clé_choisie = random.choice(list(Q))
+    valeur = Q[clé_choisie]
+    print(clé_choisie, valeur)
 
-
-        
+# Save the Q-table to a file
+np.save('Qtable.npy', Q)
