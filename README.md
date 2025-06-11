@@ -1,7 +1,5 @@
 # Black_jack_ia
 
-https://www.pokerstars.com/fr/casino/how-to-play/blackjack/premium/ 
-
 ## Règles du Black Jack 
 
 Le Black Jack est un jeu de cartes où le but est de battre le croupier en obtenant une main dont la valeur est la plus proche possible de 21, sans jamais la dépasser.
