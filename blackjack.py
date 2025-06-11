@@ -4,7 +4,7 @@ import random as random
 def create_packofcard() : 
     #We create a pack of cards 0=spade, 1=heart, 2=clubs, 3=diamonds,
     #Also everything beyond ten so every head is valued at 10 points
-    #Exepect for the ace wich can either be 1 or 11
+    #Exepect for the ace wich can either be 2 or 11
     pack = []
     for i in range(4):
         for j in range(2,12): 
@@ -102,7 +102,7 @@ def blackjack(numberofpack,bet) :
         continue_game,player_points,croupier_points,cards,discard,assurance ,surrender,double,split= turn(user_input,player_points,croupier_points,cards,discard,assurance , surrender,double,split)
             
             
-        adujste_points(player_points)
+        adjust_points(player_points)
         print("ajustement ", sum(player_points))
     if surrender:
         total_points==-1
@@ -122,7 +122,7 @@ def blackjack(numberofpack,bet) :
 
         discard.append(card)
         croupier_points.append(card[1])
-        adujste_points(croupier_points)
+        adjust_points(croupier_points)
         cards.pop(random_index)
 
 
@@ -169,3 +169,4 @@ def game_result(bet,split_point,croupier_points,assurance,surrender,double,black
     return total
 
 
+print(blackjack(4,10))
