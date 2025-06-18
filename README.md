@@ -40,14 +40,16 @@ Ce projet vise à développer une intelligence artificielle capable de jouer au 
    python src/train.py
    ```
 
-## Résultats
+## Limites rencontrées
 
-L'IA a démontré une amélioration significative de ses performances après plusieurs milliers de parties, illustrant la puissance de l'apprentissage par renforcement dans des environnements complexes et incertains comme le Black Jack.
+Malgré la mise en place de l'apprentissage par renforcement, les résultats obtenus n'ont pas été pleinement convaincants. Deux principales raisons expliquent ces limites :
 
-## Contribuer
+- **Durée d'entraînement** : L'apprentissage par renforcement nécessite un très grand nombre de parties pour converger vers une stratégie optimale. Les temps d'entraînement se sont révélés particulièrement longs avec Python.
+- **Gestion du multithreading** : Python présente des limitations importantes pour le calcul parallèle intensif, notamment à cause du GIL (Global Interpreter Lock), ce qui a freiné l'accélération de l'entraînement via le multithreading.
 
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou une pull request.
+## Vers une version Rust
 
----
+Pour surmonter ces obstacles, nous avons créé un nouveau dépôt reprenant ce projet, mais entièrement réécrit en **Rust**. Ce langage permet une gestion efficace du multithreading et des performances nettement supérieures pour ce type de simulation intensive.
 
-**Black Jack IA** : Quand l'intelligence artificielle apprend à battre la banque !
+👉 [Voir le dépôt Rust](lien_vers_le_repo_rust)
+
