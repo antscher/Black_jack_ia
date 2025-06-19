@@ -4,6 +4,8 @@ Bienvenue dans **Black Jack IA**, un projet innovant qui explore l'intelligence 
 
 ## Présentation du projet
 
+Ce projet a été continué sur un autre repository (cf fin de page)
+
 Ce projet vise à développer une intelligence artificielle capable de jouer au Black Jack de manière optimale. Nous avons mis en œuvre des techniques avancées d'apprentissage par renforcement pour permettre à l'IA d'apprendre, s'adapter et s'améliorer au fil des parties.
 
 ## Points forts
@@ -15,15 +17,9 @@ Ce projet vise à développer une intelligence artificielle capable de jouer au 
 
 ## Technologies utilisées
 
-- Python (ou autre langage utilisé)
-- Bibliothèques d'apprentissage automatique (ex: TensorFlow, PyTorch, NumPy)
-- Outils de visualisation (ex: Matplotlib)
-
-## Structure du projet
-
-- `src/` : Code source principal de l'IA et de l'environnement de jeu
-- `notebooks/` : Analyses, visualisations et expérimentations
-- `data/` : Données générées lors de l'entraînement
+- Python 
+- Pas de bibliotheque d'apprentissage
+- Outils de visualisation (pas devellopés)
 
 ## Comment démarrer
 
@@ -31,14 +27,9 @@ Ce projet vise à développer une intelligence artificielle capable de jouer au 
    ```bash
    git clone https://github.com/votre-utilisateur/Black_jack_ia.git
    ```
-2. Installez les dépendances :
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Lancez l'entraînement de l'IA :
-   ```bash
-   python src/train.py
-   ```
+2. Installez les dépendances 
+
+3. Lancez l'entraînement de l'IA 
 
 ## Limites rencontrées
 
